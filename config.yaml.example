@@ -1,0 +1,6 @@
+db_name: test
+db_user: root
+db_password: secret
+db_host: localhost
+backup_dir: /var/opt/mysql_backups
+bin_log_index: /usr/local/var/mysql/binlog.index
