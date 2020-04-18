@@ -25,6 +25,7 @@ def full_backup(**kwargs):
                    "--master-data=2 {db_name} | gzip > {destination}/{db_name}_$(date +'%Y-%m-%d-%H%M').sql.gz" \
         .format(destination=destination, **kwargs)
     os.system(dump_command)
+    log("Saved full backup into " + destination)
 
 
 @cli.command()
@@ -45,7 +46,10 @@ def incremental(**kwargs):
     last_but_one_bin_log_path = kwargs['bin_log_index'].replace('index', last_but_one_bin_log_number)
     # copy binary log to backup destination
     backup_destination = compose_backup_destination(kwargs['backup_dir'])
-    copyfile(last_but_one_bin_log_path, os.path.join(backup_destination, last_but_one_bin_log_path.split('/')[-1]))
+    create_dir_if_not_exists(backup_destination)
+    backup_file_destination = os.path.join(backup_destination, last_but_one_bin_log_path.split('/')[-1])
+    copyfile(last_but_one_bin_log_path, backup_file_destination)
+    log("Saved incremental backup: " + backup_file_destination)
 
 
 def get_config():
@@ -68,6 +72,11 @@ def compose_backup_destination(backup_dir):
         datetime.today().strftime('%Y-%m'),
         datetime.today().strftime('%Y-%m-%d')
     )
+
+
+def log(text):
+    now = datetime.now()
+    print "[{time}] {text}".format(time=now.strftime("%Y-%m-%d %H:%M:%S"), text=text)
 
 
 if __name__ == '__main__':
