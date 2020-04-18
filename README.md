@@ -4,14 +4,14 @@
 ```shell script
 $ python mysqlbackup.py full-backup
 ```
-Эта команда снимает полный бэкап с помощью `mysqldump`, сжимает с помощью `gzip` и сохраняет в папку `/<backup_dir>/2020/2020-01/2020-01-01/db_name_2020-01-01-0000.sql.gz`
+Эта команда снимает полный бэкап с помощью `mysqldump`, сжимает с помощью `gzip` и сохраняет в папку в формате `/<backup_dir>/2020/2020-01/2020-01-01/db_name_2020-01-01-0000.sql.gz`
 
 ### Инкрементальный бэкап
 ```shell script
 $ python mysqlbackup.py incremental
 ``` 
 
-Эта команда выполняет команду [FLUSH LOGS](https://dev.mysql.com/doc/refman/8.0/en/flush.html#flush-logs), и копирует предпоследний бинарный лог в папку `/<backup_dir>/2020/2020-01/2020-01-01/mysql-bin.000001`
+Эта команда выполняет команду [FLUSH LOGS](https://dev.mysql.com/doc/refman/8.0/en/flush.html#flush-logs), и копирует предпоследний бинарный лог в папку рядом с полным бэкапом
 
 [Подробнее](https://dev.mysql.com/doc/refman/5.7/en/backup-methods.html) о разных методах бэпапа в mysql
 
@@ -69,8 +69,8 @@ $ sudo crontab -e
 
 Добавляем следующие строки:
 ```shell script
-0 0 * * * python /home/mustafo/mysqlbackup-master/mysqlbackup.py full-backup
-*/15 * * * * python /home/mustafo/mysqlbackup-master/mysqlbackup.py incremental
+0 0 * * * python /home/johndoe/mysqlbackup-master/mysqlbackup.py full-backup
+*/15 * * * * python /home/johndoe/mysqlbackup-master/mysqlbackup.py incremental
 ```
 
 # Восстановление
