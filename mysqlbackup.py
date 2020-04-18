@@ -21,7 +21,7 @@ def cli():
 def full_backup(**kwargs):
     destination = compose_backup_destination(kwargs['backup_dir'])
     create_dir_if_not_exists(destination)
-    dump_command = "mysqldump -u{db_user} -p{db_password} -h{db_host} --lock-tables=false --flush-logs " \
+    dump_command = "mysqldump -u{db_user} -p'{db_password}' -h{db_host} --lock-tables=false --flush-logs " \
                    "--master-data=2 {db_name} | gzip > {destination}/{db_name}_$(date +'%Y-%m-%d-%H%M').sql.gz" \
         .format(destination=destination, **kwargs)
     os.system(dump_command)
@@ -35,7 +35,7 @@ def full_backup(**kwargs):
 @click.option('--bin-log-index', help='Full path to bin log index file')
 def incremental(**kwargs):
     # flush binary logs
-    flush_logs_command = "mysqladmin -u{db_user} -p{db_password} -h{db_host} flush-logs".format(**kwargs)
+    flush_logs_command = "mysqladmin -u{db_user} -p'{db_password}' -h{db_host} flush-logs".format(**kwargs)
     os.system(flush_logs_command)
     # read the binary log index file to find the path of last but one binary log
     fp = open(kwargs['bin_log_index'], 'r')
